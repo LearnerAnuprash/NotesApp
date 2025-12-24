@@ -1,6 +1,7 @@
 import express from "express";
 import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
+import cors from "cors";
 
 // Configuring environment variables using dotenv
 import dotenv from "dotenv";
@@ -16,6 +17,11 @@ const PORT = process.env.PORT || 5001;
 // appears
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 app.use((req, _, next) => {
   // in this middleware, 'res' is never used , so replace with '_'
