@@ -1,3 +1,4 @@
+import api from "../lib/axios";
 import { ArrowLeftIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -20,15 +21,23 @@ const CreatePage = () => {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:5001/api/notes", {
+      await api.post("/notes", {
         title,
         content,
       });
       toast.success("Note created successfully!");
-      navigate();
+      navigate("/");
     } catch (error) {
       console.log("Error creating note", error);
-      toast.error("failed to create note!");
+
+      if (error.response.status === 429) {
+        toast.error("Slow down! You are creating notes too fast", {
+          duration: 4000,
+          icon: "💀",
+        });
+      } else {
+        toast.error("Failed to create note");
+      }
     } finally {
       setLoading(false);
     }
